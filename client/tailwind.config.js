@@ -5,7 +5,11 @@ export default withMT({
   mode: "jit",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        cinzel: '"Cinzel", serif',
+      },
+    },
   },
   plugins: [],
 });

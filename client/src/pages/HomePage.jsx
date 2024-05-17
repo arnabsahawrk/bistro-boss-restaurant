@@ -1,12 +1,13 @@
-import { Helmet } from "react-helmet-async";
+import HomeBanner from "../components/Banner/HomeBanner";
+import DynamicTitle from "../components/common/Helmet/DynamicTitle";
 
 const HomePage = () => {
   return (
     <>
-      <Helmet>
-        <title>Home</title>
-      </Helmet>
-      <section>{/* <div className="container mx-auto px-4"></div> */}</section>
+      <DynamicTitle Title="Bistro Boss | Home" />
+      <section>
+        <HomeBanner />
+      </section>
     </>
   );
 };
