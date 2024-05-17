@@ -1,4 +1,4 @@
-import HomeBanner from "../components/Banner/HomeBanner";
+import Home from "../components/Home/Home";
 import DynamicTitle from "../components/common/Helmet/DynamicTitle";
 
 const HomePage = () => {
@@ -6,7 +6,7 @@ const HomePage = () => {
     <>
       <DynamicTitle Title="Bistro Boss | Home" />
       <section>
-        <HomeBanner />
+        <Home />
       </section>
     </>
   );
