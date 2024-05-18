@@ -7,6 +7,7 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Container from "../Container/Container";
 
 function NavList() {
   return (
@@ -132,8 +133,8 @@ const Nav = () => {
   }, []);
 
   return (
-    <Navbar className="absolute top-0 z-50 bg-[#15151580] mx-auto max-w-full px-4 md:px-10 shadow-sm w-full backdrop-filter-none backdrop-blur-none border-none rounded-none">
-      <div className="flex items-center justify-between">
+    <Navbar className="absolute top-0 z-50 bg-[#15151580] mx-auto max-w-full shadow-sm w-full backdrop-filter-none backdrop-blur-none border-none rounded-none">
+      <Container className="flex items-center justify-between">
         <Link className="flex flex-col items-center" to="/">
           <Typography
             as="h1"
@@ -163,7 +164,7 @@ const Nav = () => {
             <Bars3Icon className="h-6 w-6 text-white" strokeWidth={2} />
           )}
         </IconButton>
-      </div>
+      </Container>
       <Collapse open={openNav}>
         <NavList />
       </Collapse>
