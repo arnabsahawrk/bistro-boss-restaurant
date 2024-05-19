@@ -1,5 +1,6 @@
 import HomeBanner from "../Banner/HomeBanner";
 import OrderOnlineSection from "./OrderOnlineSection";
+import OurMenuSection from "./OurMenuSection";
 import ParallaxSection from "./ParallaxSection";
 
 const Home = () => {
@@ -8,6 +9,7 @@ const Home = () => {
       <HomeBanner />
       <OrderOnlineSection />
       <ParallaxSection />
+      <OurMenuSection />
     </>
   );
 };

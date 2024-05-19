@@ -5,11 +5,11 @@ import { Parallax } from "react-parallax";
 const ParallaxSection = () => {
   return (
     <Parallax
-      blur={5}
+      blur={10}
       bgImage={chefService}
       strength={200}
       bgImageAlt="Chef Service"
-      className="bg-cover bg-center bg-no-repeat bg-fixed"
+      className="bg-cover bg-center bg-no-repeat"
     >
       <Container className="md:py-[119px] py-[60px]">
         <div className="bg-white py-[10px] md:py-[96px] px-[4px] md:px-[112px] text-center text-[#151515] space-y-2">

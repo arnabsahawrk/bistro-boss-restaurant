@@ -26,6 +26,14 @@ const client = new MongoClient(uri, {
 //Send and Get data from sever to database
 async function run() {
   try {
+    const database = client.db("usersDB");
+    const menu = database.collection("menu");
+
+    app.get("/menu", async (req, res) => {
+      const result = await menu.find({}).toArray();
+
+      res.send(result);
+    });
   } catch (err) {
     console.log("Error from database:", err);
   }
