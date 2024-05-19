@@ -29,10 +29,21 @@ async function run() {
     const database = client.db("usersDB");
     const menu = database.collection("menu");
 
+    //Get Menu
     app.get("/menu", async (req, res) => {
       const skip = parseFloat(req.query.skip);
       const limit = parseFloat(req.query.limit);
+
       const result = await menu.find({}).skip(skip).limit(limit).toArray();
+
+      res.send(result);
+    });
+
+    //Get Menu On Category
+    app.get("/menu/c", async (req, res) => {
+      const category = req.query.category;
+
+      const result = await menu.find({ category: category }).toArray();
 
       res.send(result);
     });
