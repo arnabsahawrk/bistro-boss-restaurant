@@ -48,3 +48,24 @@ export const useGetMenuOnCategory = () => {
 
   return { categoryAsync, menuOnCategory, categoryLoading };
 };
+
+//Get Reviews
+export const useGetReviews = () => {
+  const axiosCommon = useAxiosCommon();
+
+  const getReviews = async () => {
+    try {
+      const { data } = await axiosCommon("/reviews");
+      return data;
+    } catch (err) {
+      throw new Error(err.response.data.message || "Failed to get reviews");
+    }
+  };
+
+  const { data: reviews = [], isLoading: reviewsLoading } = useQuery({
+    queryKey: ["reviews"],
+    queryFn: getReviews,
+  });
+
+  return { reviews, reviewsLoading };
+};

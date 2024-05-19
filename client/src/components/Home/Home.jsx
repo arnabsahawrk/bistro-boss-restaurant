@@ -5,6 +5,7 @@ import FeaturedSection from "./FeaturedSection";
 import OrderOnlineSection from "./OrderOnlineSection";
 import OurMenuSection from "./OurMenuSection";
 import ParallaxSection from "./ParallaxSection";
+import TestimonialSection from "./TestimonialSection";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
       <ContactSection />
       <ChefRecommendsSection />
       <FeaturedSection />
+      <TestimonialSection />
     </>
   );
 };
