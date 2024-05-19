@@ -15,7 +15,7 @@ export const useGetMenu = (skip, limit) => {
   };
 
   const { data: menu = [], isLoading: menuLoading } = useQuery({
-    queryKey: ["menu", skip, limit],
+    queryKey: ["menu"],
     queryFn: getMenu,
   });
 

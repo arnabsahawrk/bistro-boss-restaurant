@@ -43,7 +43,10 @@ async function run() {
     app.get("/menu/c", async (req, res) => {
       const category = req.query.category;
 
+      console.log(category);
       const result = await menu.find({ category: category }).toArray();
+
+      console.log(result);
 
       res.send(result);
     });
