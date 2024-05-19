@@ -30,7 +30,9 @@ async function run() {
     const menu = database.collection("menu");
 
     app.get("/menu", async (req, res) => {
-      const result = await menu.find({}).toArray();
+      const skip = parseFloat(req.query.skip);
+      const limit = parseFloat(req.query.limit);
+      const result = await menu.find({}).skip(skip).limit(limit).toArray();
 
       res.send(result);
     });
