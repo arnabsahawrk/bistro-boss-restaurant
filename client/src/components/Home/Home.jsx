@@ -1,4 +1,5 @@
 import HomeBanner from "../Banner/HomeBanner";
+import ChefRecommendsSection from "./ChefRecommendsSection";
 import ContactSection from "./ContactSection";
 import OrderOnlineSection from "./OrderOnlineSection";
 import OurMenuSection from "./OurMenuSection";
@@ -12,6 +13,7 @@ const Home = () => {
       <ParallaxSection />
       <OurMenuSection />
       <ContactSection />
+      <ChefRecommendsSection />
     </>
   );
 };
