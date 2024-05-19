@@ -28,6 +28,7 @@ async function run() {
   try {
     const database = client.db("usersDB");
     const menu = database.collection("menu");
+    const reviews = database.collection("reviews");
 
     //Get Menu
     app.get("/menu", async (req, res) => {
@@ -43,10 +44,14 @@ async function run() {
     app.get("/menu/c", async (req, res) => {
       const category = req.query.category;
 
-      console.log(category);
       const result = await menu.find({ category: category }).toArray();
 
-      console.log(result);
+      res.send(result);
+    });
+
+    //Get Reviews
+    app.get("/reviews", async (req, res) => {
+      const result = await reviews.find({}).toArray();
 
       res.send(result);
     });
