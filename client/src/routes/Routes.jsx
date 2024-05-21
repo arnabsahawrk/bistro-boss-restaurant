@@ -6,7 +6,7 @@ import MenuPage from "../pages/MenuPage";
 import ContactPage from "../pages/ContactPage";
 import SignIn from "../components/SignIn/SignIn";
 import ShopPage from "../pages/ShopPage";
-import UserLoginRoute from "./UserLoginRoute";
+import GuestOnlyRoute from "./GuestOnlyRoute";
 
 const router = createBrowserRouter([
   {
@@ -29,9 +29,9 @@ const router = createBrowserRouter([
       {
         path: "/signIn",
         element: (
-          <UserLoginRoute>
+          <GuestOnlyRoute>
             <SignIn />
-          </UserLoginRoute>
+          </GuestOnlyRoute>
         ),
       },
       {
