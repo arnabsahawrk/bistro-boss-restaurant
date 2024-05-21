@@ -5,18 +5,19 @@ import { FaGoogle } from "react-icons/fa";
 import useFirebase from "../../hooks/useFirebase";
 import toast from "react-hot-toast";
 import loadingGif from "../../assets/others/loader3.gif";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CommonButton from "../common/Button/CommonButton";
 
 const SignIn = () => {
   const { signInWithGoogle, authLoading, setAuthLoading } = useFirebase();
   const navigate = useNavigate();
+  const location = useLocation();
   const handleSignIn = async () => {
     try {
       await signInWithGoogle();
       toast.success("Successfully Sign In");
       setAuthLoading(false);
-      navigate("/");
+      navigate(location?.state || "/");
     } catch (err) {
       toast.error(`${err}`);
       setAuthLoading(false);

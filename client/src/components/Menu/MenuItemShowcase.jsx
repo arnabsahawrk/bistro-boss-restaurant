@@ -12,7 +12,10 @@ const MenuItemShowcase = ({ menu }) => {
         ))}
       </div>
       <div className="text-center mt-4">
-        <CommonButton text="ORDER YOUR FAVORITE FOOD" link="/menu" />
+        <CommonButton
+          text="ORDER YOUR FAVORITE FOOD"
+          link={`/shop/${menu[0]?.category}`}
+        />
       </div>
     </Container>
   );

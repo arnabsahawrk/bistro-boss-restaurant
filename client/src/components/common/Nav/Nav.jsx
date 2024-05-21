@@ -89,7 +89,7 @@ function NavList() {
         className="p-1 font-bold font-cinzel text-white hover:text-[#EEFF25]"
       >
         <NavLink
-          to="/shop"
+          to="/shop/salad"
           className={({ isActive, isPending }) =>
             `${isActive ? "text-[#EEFF25]" : ""} ${
               isPending ? "text-amber-900" : ""

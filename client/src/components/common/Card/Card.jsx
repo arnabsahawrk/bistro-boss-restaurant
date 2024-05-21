@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import CartButton from "../Button/CartButton";
 
 const Card = ({ cardItem }) => {
-  const { name, recipe, image, price } = cardItem;
+  const { _id, name, recipe, image, price } = cardItem;
   return (
     <div className="group">
       <div className="relative">
@@ -22,7 +22,7 @@ const Card = ({ cardItem }) => {
       <div className="bg-[#F3F3F3] text-center space-y-3 py-3 px-2 rounded-b-md">
         <h2 className="text-[#151515] text-xl font-semibold">{name}</h2>
         <p className="text-[#151515] text-sm">{recipe}</p>
-        <CartButton text="add to cart" />
+        <CartButton text="add to cart" id={_id} />
       </div>
     </div>
   );
