@@ -8,8 +8,10 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Container from "../Container/Container";
+import useFirebase from "../../../hooks/useFirebase";
 
 function NavList() {
+  const { user, signOutUser } = useFirebase();
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       <Typography
@@ -103,16 +105,20 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-bold font-cinzel text-white hover:text-[#EEFF25]"
       >
-        <NavLink
-          to="/signIn"
-          className={({ isActive, isPending }) =>
-            `${isActive ? "text-[#EEFF25]" : ""} ${
-              isPending ? "text-amber-900" : ""
-            }`
-          }
-        >
-          Sign In
-        </NavLink>
+        {user ? (
+          <button onClick={() => signOutUser()}>Sign Out</button>
+        ) : (
+          <NavLink
+            to="/signIn"
+            className={({ isActive, isPending }) =>
+              `${isActive ? "text-[#EEFF25]" : ""} ${
+                isPending ? "text-amber-900" : ""
+              }`
+            }
+          >
+            Sign In
+          </NavLink>
+        )}
       </Typography>
     </ul>
   );

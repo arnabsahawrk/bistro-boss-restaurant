@@ -4,6 +4,8 @@ import ErrorLayout from "../layouts/ErrorLayout";
 import HomePage from "../pages/HomePage";
 import MenuPage from "../pages/MenuPage";
 import ContactPage from "../pages/ContactPage";
+import SignIn from "../components/SignIn/SignIn";
+import ShopPage from "../pages/ShopPage";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +24,14 @@ const router = createBrowserRouter([
       {
         path: "/contact",
         element: <ContactPage />,
+      },
+      {
+        path: "/signIn",
+        element: <SignIn />,
+      },
+      {
+        path: "/shop",
+        element: <ShopPage />,
       },
     ],
   },
