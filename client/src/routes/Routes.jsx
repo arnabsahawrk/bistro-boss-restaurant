@@ -6,6 +6,7 @@ import MenuPage from "../pages/MenuPage";
 import ContactPage from "../pages/ContactPage";
 import SignIn from "../components/SignIn/SignIn";
 import ShopPage from "../pages/ShopPage";
+import UserLoginRoute from "./UserLoginRoute";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/signIn",
-        element: <SignIn />,
+        element: (
+          <UserLoginRoute>
+            <SignIn />
+          </UserLoginRoute>
+        ),
       },
       {
         path: "/shop/:category",
