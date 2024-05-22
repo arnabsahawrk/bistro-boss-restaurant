@@ -7,6 +7,8 @@ import ContactPage from "../pages/ContactPage";
 import SignIn from "../components/SignIn/SignIn";
 import ShopPage from "../pages/ShopPage";
 import GuestOnlyRoute from "./GuestOnlyRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,16 @@ const router = createBrowserRouter([
         element: <ShopPage />,
       },
     ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    errorElement: <ErrorLayout />,
+    children: [],
   },
 ]);
 

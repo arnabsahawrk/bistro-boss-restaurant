@@ -11,7 +11,7 @@ import auth from "../firebase/firebase.config";
 export const AuthContext = createContext(null);
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   //Google Sign In
   const googleProvider = new GoogleAuthProvider();
@@ -28,8 +28,8 @@ const AuthContextProvider = ({ children }) => {
   //Observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
       setAuthLoading(false);
+      setUser(currentUser);
     });
 
     return () => unsubscribe();
