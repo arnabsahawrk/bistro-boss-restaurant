@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../Axios/useAxiosPublic";
+import useAxiosSecure from "../Axios/useAxiosSecure";
 
 //Get Menu
 export const useGetMenu = (skip, limit) => {
@@ -40,7 +41,7 @@ export const useGetMenuOnCategory = () => {
   const {
     mutateAsync: categoryAsync,
     data: menuOnCategory = [],
-    isLoading: categoryLoading,
+    isPending: categoryLoading,
   } = useMutation({
     mutationKey: ["menuOnCategory"],
     mutationFn: getMenuOnCategory,
@@ -68,4 +69,29 @@ export const useGetReviews = () => {
   });
 
   return { reviews, reviewsLoading };
+};
+
+//Get Cart Data
+export const useGetCart = () => {
+  const axiosSecure = useAxiosSecure();
+
+  const getCart = async (email) => {
+    try {
+      const { data } = await axiosSecure.get(`/carts?email=${email}`);
+      return data;
+    } catch (err) {
+      throw new Error(err.response.data.message || "Failed to get cart data");
+    }
+  };
+
+  const {
+    mutateAsync: cartGetAsync,
+    data: userCartData = [],
+    isPending: userCartPending,
+  } = useMutation({
+    mutationKey: ["userCart"],
+    mutationFn: getCart,
+  });
+
+  return { cartGetAsync, userCartData, userCartPending };
 };

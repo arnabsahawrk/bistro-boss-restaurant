@@ -5,24 +5,30 @@ import { usePostCart } from "../../../hooks/TanStackQuery/usePost";
 import toast from "react-hot-toast";
 import { Spinner } from "@material-tailwind/react";
 
-const CartButton = ({ id, text }) => {
+const CartButton = ({ menu, text }) => {
   const { cartAsync, cartPending } = usePostCart();
 
   const { user } = useFirebase();
   const navigate = useNavigate();
   const location = useLocation();
-  const handleCart = async (id) => {
+  const handleCart = async (menu) => {
     if (!user) {
       navigate("/signIn", { state: location.pathname });
     } else {
       const addedTime = new Date().toLocaleString();
-      const userName = user?.name;
+      const userName = user?.displayName;
       const userEmail = user?.email;
-      const menuId = id;
+      const { _id, ...rest } = menu;
+      const cartMenu = {
+        menuId: _id,
+        ...rest,
+        addedTime,
+        userName,
+        userEmail,
+      };
 
-      const userCartInfo = { addedTime, userName, userEmail, menuId };
       try {
-        await cartAsync(userCartInfo);
+        await cartAsync(cartMenu);
         toast.success("Cart Added");
       } catch (err) {
         toast.error(`${err}`);
@@ -37,7 +43,7 @@ const CartButton = ({ id, text }) => {
         </div>
       ) : (
         <button
-          onClick={() => handleCart(id)}
+          onClick={() => handleCart(menu)}
           className="rounded-lg border-b-[3px] border-[#BB8506] py-5 px-[30px] text-[#BB8506] bg-[#E8E8E8] hover:border-[#1F2937] hover:bg-[#1F2937] font-bold"
         >
           {text}
@@ -49,7 +55,7 @@ const CartButton = ({ id, text }) => {
 
 CartButton.propTypes = {
   text: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  menu: PropTypes.object.isRequired,
 };
 
 export default CartButton;

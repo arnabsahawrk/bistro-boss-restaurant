@@ -1,14 +1,14 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/common/Nav/Sidebar";
+import AdminBar from "../components/common/Nav/AdminBar";
 
-const DashboardLayout = () => {
+const AdminLayout = () => {
   return (
     <div className="relative min-h-screen lg:flex">
       {/* Sidebar */}
-      <Sidebar />
+      <AdminBar />
 
       {/* Outlet --> Dynamic content */}
-      <div className="flex-1 lg:ml-64 bg-[#F6F6F6]">
+      <div className="flex-1 lg:ml-64">
         <div className="p-5">
           <Outlet />
         </div>
@@ -17,4 +17,4 @@ const DashboardLayout = () => {
   );
 };
 
-export default DashboardLayout;
+export default AdminLayout;

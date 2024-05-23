@@ -9,6 +9,9 @@ import ShopPage from "../pages/ShopPage";
 import GuestOnlyRoute from "./GuestOnlyRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "./PrivateRoute";
+import AdminLayout from "../layouts/AdminLayout";
+import UserHomePage from "../pages/Dashboard/UserHomePage";
+import MyCartPage from "../pages/Dashboard/MyCartPage";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +52,21 @@ const router = createBrowserRouter([
         <DashboardLayout />
       </PrivateRoute>
     ),
+    errorElement: <ErrorLayout />,
+    children: [
+      {
+        index: true,
+        element: <UserHomePage />,
+      },
+      {
+        path: "/dashboard/myCart",
+        element: <MyCartPage />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
     errorElement: <ErrorLayout />,
     children: [],
   },

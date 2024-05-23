@@ -92,6 +92,17 @@ async function run() {
       const result = await cartCollection.insertOne(cartData);
       res.send(result);
     });
+
+    //Get Cart Data
+    app.get("/carts", async (req, res) => {
+      const email = req.query.email;
+      const result = await cartCollection
+        .find({
+          userEmail: email,
+        })
+        .toArray();
+      res.send(result);
+    });
   } catch (err) {
     console.log("Error from database:", err);
   }
