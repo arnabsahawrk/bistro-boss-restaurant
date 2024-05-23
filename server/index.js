@@ -27,15 +27,21 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const database = client.db("usersDB");
-    const menu = database.collection("menu");
-    const reviews = database.collection("reviews");
+    const menuCollection = database.collection("menu");
+    const reviewCollection = database.collection("reviews");
+    const userCollection = database.collection("users");
+    const cartCollection = database.collection("carts");
 
     //Get Menu
     app.get("/menu", async (req, res) => {
       const skip = parseFloat(req.query.skip);
       const limit = parseFloat(req.query.limit);
 
-      const result = await menu.find({}).skip(skip).limit(limit).toArray();
+      const result = await menuCollection
+        .find({})
+        .skip(skip)
+        .limit(limit)
+        .toArray();
 
       res.send(result);
     });
@@ -44,15 +50,46 @@ async function run() {
     app.get("/menu/c", async (req, res) => {
       const category = req.query.category;
 
-      const result = await menu.find({ category: category }).toArray();
+      const result = await menuCollection
+        .find({ category: category })
+        .toArray();
 
       res.send(result);
     });
 
     //Get Reviews
     app.get("/reviews", async (req, res) => {
-      const result = await reviews.find({}).toArray();
+      const result = await reviewCollection.find({}).toArray();
 
+      res.send(result);
+    });
+
+    //Put User Data
+    app.put("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user?.email };
+      //Is The User Already Exist In DB
+      const isExist = await userCollection.findOne(query);
+      if (isExist) {
+        //If Existing User Log In Again
+        return res.send({ message: "User Already Exist" });
+      }
+      //Save User For the first time
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          ...user,
+          openedAccount: new Date().toLocaleString(),
+        },
+      };
+      const result = await userCollection.updateOne(query, updateDoc, options);
+      res.send(result);
+    });
+
+    //Post Cart
+    app.post("/carts", async (req, res) => {
+      const cartData = req.body;
+      const result = await cartCollection.insertOne(cartData);
       res.send(result);
     });
   } catch (err) {

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import {
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -7,9 +7,12 @@ import {
   signOut,
 } from "firebase/auth";
 import auth from "../firebase/firebase.config";
+import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 
 export const AuthContext = createContext(null);
 const AuthContextProvider = ({ children }) => {
+  const axiosPublic = useAxiosPublic();
+
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -25,15 +28,34 @@ const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  //Save User In DB
+  const saveUser = useCallback(
+    async (user) => {
+      const currentUser = {
+        name: user?.displayName,
+        email: user?.email,
+        role: "Guest",
+        status: "verified",
+      };
+
+      const { data } = await axiosPublic.put("/users", currentUser);
+      return data;
+    },
+    [axiosPublic]
+  );
+
   //Observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setAuthLoading(false);
       setUser(currentUser);
+      if (currentUser) {
+        saveUser(currentUser);
+      }
+      setAuthLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [saveUser]);
 
   const AuthInfo = {
     user,

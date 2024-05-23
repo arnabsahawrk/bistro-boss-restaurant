@@ -3,19 +3,17 @@ import CartButton from "../Button/CartButton";
 
 const Card = ({ cardItem }) => {
   const { _id, name, recipe, image, price } = cardItem;
+
   return (
     <div className="group">
-      <div className="relative">
+      <div className="relative overflow-hidden">
         <img
-          className="w-full object-cover h-[200px] rounded-t-md group-hover:scale-105 
-          transition duration-700 group-hover:rounded-b-md"
+          className="w-full object-cover h-[200px] rounded-t-md group-hover:scale-110 
+          transition duration-700"
           src={image}
           alt={name}
         />
-        <span
-          className="absolute top-3 bg-[#111827] text-white text-lg px-2 py-1 right-3 group-hover:scale-105 
-          transition duration-700"
-        >
+        <span className="absolute top-3 bg-[#111827] text-white text-lg px-2 py-1 right-3">
           ${price}
         </span>
       </div>
