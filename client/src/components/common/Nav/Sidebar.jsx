@@ -20,6 +20,7 @@ const Sidebar = () => {
       await signOutUser();
       toast.success("Sign Out");
       navigate("/");
+      localStorage.removeItem("access-token");
     } catch (err) {
       toast.error(`${err}`);
     }

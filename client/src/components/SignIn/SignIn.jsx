@@ -7,17 +7,26 @@ import toast from "react-hot-toast";
 import loadingGif from "../../assets/others/loader3.gif";
 import { useLocation, useNavigate } from "react-router-dom";
 import CommonButton from "../common/Button/CommonButton";
+import useAxiosPublic from "../../hooks/Axios/useAxiosPublic";
 
 const SignIn = () => {
   const { signInWithGoogle, authLoading, setAuthLoading } = useFirebase();
+  const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const location = useLocation();
   const handleSignIn = async () => {
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
       toast.success("Successfully Sign In");
       setAuthLoading(false);
       navigate(location?.state || "/");
+      if (result?.user?.email) {
+        const { data } = await axiosPublic.post("/jwt", {
+          email: result?.user?.email,
+        });
+
+        localStorage.setItem("access-token", data.token);
+      }
     } catch (err) {
       toast.error(`${err}`);
       setAuthLoading(false);

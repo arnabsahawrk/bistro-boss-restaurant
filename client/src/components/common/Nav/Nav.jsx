@@ -5,13 +5,25 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Container from "../Container/Container";
 import useFirebase from "../../../hooks/useFirebase";
+import toast from "react-hot-toast";
 
 function NavList() {
   const { user, signOutUser } = useFirebase();
+  const navigate = useNavigate();
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      toast.success("Sign Out");
+      navigate("/");
+      localStorage.removeItem("access-token");
+    } catch (err) {
+      toast.error(err);
+    }
+  };
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       <Typography
@@ -106,7 +118,7 @@ function NavList() {
         className="p-1 font-bold font-cinzel text-white hover:text-[#EEFF25]"
       >
         {user ? (
-          <button onClick={() => signOutUser()}>Sign Out</button>
+          <button onClick={handleSignOut}>Sign Out</button>
         ) : (
           <NavLink
             to="/signIn"
