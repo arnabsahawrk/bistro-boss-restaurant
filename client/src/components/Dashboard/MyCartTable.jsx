@@ -1,6 +1,4 @@
-// import { useEffect } from "react";
 import { useGetCart } from "../../hooks/TanStackQuery/useGet";
-// import useFirebase from "../../hooks/useFirebase";
 import toast from "react-hot-toast";
 import { Spinner } from "@material-tailwind/react";
 import CartTable from "./CartTable";
@@ -8,23 +6,8 @@ import Loader from "../common/Loader/Loader";
 import { useCartDelete } from "../../hooks/TanStackQuery/useDelete";
 
 const MyCartTable = () => {
-  // const { user } = useFirebase();
   const { userCartData, userCartLoading } = useGetCart();
   const { cartDeleteAsync, cartDeletePending } = useCartDelete();
-
-  // useEffect(() => {
-  //   const getCartData = async () => {
-  //     try {
-  //       if (user) {
-  //         await cartGetAsync(user?.email);
-  //       }
-  //     } catch (err) {
-  //       toast.error(`${err}`);
-  //     }
-  //   };
-
-  //   getCartData();
-  // }, [cartGetAsync, user]);
 
   // Handle Delete Cart
   const handleDeleteCart = async (id) => {
