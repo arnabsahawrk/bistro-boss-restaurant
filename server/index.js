@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 //config
 require("dotenv").config();
@@ -103,6 +103,18 @@ async function run() {
         .toArray();
       res.send(result);
     });
+
+    //Delete Cart Data
+    app.delete("/carts", async (req, res) => {
+      const id = req.query.id;
+      const query = { _id: new ObjectId(id) };
+
+      const result = await cartCollection.deleteOne(query);
+
+      res.send(result);
+    });
+
+    //-----------------------------------
   } catch (err) {
     console.log("Error from database:", err);
   }

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../Axios/useAxiosPublic";
 import useAxiosSecure from "../Axios/useAxiosSecure";
+import useFirebase from "../useFirebase";
 
 //Get Menu
 export const useGetMenu = (skip, limit) => {
@@ -74,24 +75,23 @@ export const useGetReviews = () => {
 //Get Cart Data
 export const useGetCart = () => {
   const axiosSecure = useAxiosSecure();
+  const { user } = useFirebase();
 
-  const getCart = async (email) => {
+  const getCart = async () => {
     try {
-      const { data } = await axiosSecure.get(`/carts?email=${email}`);
-      return data;
+      if (user && !!user?.email) {
+        const { data } = await axiosSecure.get(`/carts?email=${user?.email}`);
+        return data;
+      }
     } catch (err) {
       throw new Error(err.response.data.message || "Failed to get cart data");
     }
   };
 
-  const {
-    mutateAsync: cartGetAsync,
-    data: userCartData = [],
-    isPending: userCartPending,
-  } = useMutation({
-    mutationKey: ["userCart"],
-    mutationFn: getCart,
+  const { data: userCartData = [], isLoading: userCartLoading } = useQuery({
+    queryKey: ["userCart"],
+    queryFn: getCart,
   });
 
-  return { cartGetAsync, userCartData, userCartPending };
+  return { userCartData, userCartLoading };
 };

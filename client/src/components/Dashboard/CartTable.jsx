@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import { Card, Typography } from "@material-tailwind/react";
+import { Card, Spinner, Typography } from "@material-tailwind/react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 const TABLE_HEAD = ["", "ITEM IMAGE", "ITEM NAME", "ADDED", "PRICE", "ACTION"];
 
-const CartTable = ({ cart, handleDeleteCart }) => {
+const CartTable = ({ cart, handleDeleteCart, cartDeletePending }) => {
   return (
     <Card className="h-full w-full overflow-auto shadow-none">
       <table className="w-full min-w-max table-auto text-left">
@@ -71,12 +71,18 @@ const CartTable = ({ cart, handleDeleteCart }) => {
                   </Typography>
                 </td>
                 <td className={`${classes} text-center`}>
-                  <button
-                    onClick={() => handleDeleteCart(_id)}
-                    className="bg-[#B91C1C] p-3 rounded-md text-white text-2xl"
-                  >
-                    <RiDeleteBin6Line />
-                  </button>
+                  {cartDeletePending ? (
+                    <div className="flex justify-center">
+                      <Spinner color="red" className="h-10 w-10" />
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleDeleteCart(_id)}
+                      className="bg-[#B91C1C] p-3 rounded-md text-white text-2xl"
+                    >
+                      <RiDeleteBin6Line />
+                    </button>
+                  )}
                 </td>
               </tr>
             );
@@ -90,6 +96,7 @@ const CartTable = ({ cart, handleDeleteCart }) => {
 CartTable.propTypes = {
   cart: PropTypes.array.isRequired,
   handleDeleteCart: PropTypes.func.isRequired,
+  cartDeletePending: PropTypes.bool.isRequired,
 };
 
 export default CartTable;
