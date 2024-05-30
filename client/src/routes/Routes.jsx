@@ -12,6 +12,11 @@ import PrivateRoute from "./PrivateRoute";
 import AdminLayout from "../layouts/AdminLayout";
 import UserHomePage from "../pages/Dashboard/UserHomePage";
 import MyCartPage from "../pages/Dashboard/MyCartPage";
+import AdminRoute from "./AdminRoute";
+import AdminHomePage from "../pages/Admin/AdminHomePage";
+import AllUsersPage from "../pages/Admin/AllUsersPage";
+import PaymentPage from "../pages/Dashboard/PaymentPage";
+import PaymentHistoryPage from "../pages/Dashboard/PaymentHistoryPage";
 
 const router = createBrowserRouter([
   {
@@ -56,19 +61,70 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <UserHomePage />,
+        element: (
+          <PrivateRoute>
+            <UserHomePage />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/myCart",
-        element: <MyCartPage />,
+        element: (
+          <PrivateRoute>
+            <MyCartPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/payment",
+        element: (
+          <PrivateRoute>
+            <PaymentPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/paymentHistory",
+        element: (
+          <PrivateRoute>
+            <PaymentHistoryPage />
+          </PrivateRoute>
+        ),
       },
     ],
   },
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <PrivateRoute>
+        <AdminRoute>
+          <AdminLayout />
+        </AdminRoute>
+      </PrivateRoute>
+    ),
     errorElement: <ErrorLayout />,
-    children: [],
+    children: [
+      {
+        index: true,
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <AdminHomePage />
+            </AdminRoute>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/admin/allUsers",
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <AllUsersPage />
+            </AdminRoute>
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
 ]);
 

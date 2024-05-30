@@ -2,17 +2,20 @@ import { useState } from "react";
 import { GrLogout } from "react-icons/gr";
 import { AiOutlineBars } from "react-icons/ai";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Typography } from "@material-tailwind/react";
+import { Spinner, Typography } from "@material-tailwind/react";
 import useFirebase from "../../../hooks/useFirebase";
 import toast from "react-hot-toast";
 import { GoHomeFill } from "react-icons/go";
 import { RiAdminFill } from "react-icons/ri";
 import { FaCartShopping } from "react-icons/fa6";
+import { useGetAdmin } from "../../../hooks/TanStackQuery/useGet";
+import { MdOutlinePayment } from "react-icons/md";
 
 const Sidebar = () => {
   const { signOutUser } = useFirebase();
   const [isActive, setActive] = useState(false);
   const navigate = useNavigate();
+  const { isAdmin, isAdminLoading } = useGetAdmin();
 
   //Handle Sign Out
   const handleSignOut = async () => {
@@ -108,7 +111,6 @@ const Sidebar = () => {
               {/* My Cart */}
               <NavLink
                 to="/dashboard/myCart"
-                end
                 className={({ isActive }) =>
                   `flex items-center px-4 py-2  transition-colors duration-300 transform  hover:text-white ${
                     isActive ? "text-white" : "text-[#151515]"
@@ -118,6 +120,19 @@ const Sidebar = () => {
                 <FaCartShopping className="w-5 h-5" />
 
                 <span className="mx-4 font-medium">My Cart</span>
+              </NavLink>
+              {/* payment history */}
+              <NavLink
+                to="/dashboard/paymentHistory"
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-2  transition-colors duration-300 transform  hover:text-white ${
+                    isActive ? "text-white" : "text-[#151515]"
+                  }`
+                }
+              >
+                <MdOutlinePayment className="w-5 h-5" />
+
+                <span className="mx-4 font-medium">payment history</span>
               </NavLink>
             </nav>
           </div>
@@ -135,13 +150,24 @@ const Sidebar = () => {
           </button>
 
           {/* Admin  */}
-          <button
-            onClick={() => navigate("/admin")}
-            className="flex w-full items-center px-4 py-2 mt-2 text-[#151515] hover:text-white transition-colors duration-300 transform"
-          >
-            <RiAdminFill className="w-5 h-5" />
-            <span className="mx-4 font-medium">Admin</span>
-          </button>
+          {isAdminLoading ? (
+            <div className="flex w-full items-center px-4 py-2 mt-2">
+              <Spinner color="light-green" />
+            </div>
+          ) : (
+            <button
+              disabled={!isAdmin}
+              onClick={() => navigate("/admin")}
+              className={`flex w-full items-center px-4 py-2 mt-2 transition-colors duration-300 transform ${
+                !isAdmin
+                  ? "text-[#15151580]"
+                  : "text-[#151515] hover:text-white"
+              }`}
+            >
+              <RiAdminFill className="w-5 h-5" />
+              <span className="mx-4 font-medium">Admin</span>
+            </button>
+          )}
 
           {/* Sign Out  */}
           <button

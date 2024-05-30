@@ -5,6 +5,7 @@ var jwt = require("jsonwebtoken");
 
 //config
 require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const port = process.env.PORT || 8080;
 const app = express();
 
@@ -48,20 +49,53 @@ const client = new MongoClient(uri, {
 //Send and Get data from sever to database
 async function run() {
   try {
+    //all collection
     const database = client.db("usersDB");
     const menuCollection = database.collection("menu");
     const reviewCollection = database.collection("reviews");
     const userCollection = database.collection("users");
     const cartCollection = database.collection("carts");
+    const paymentCollection = database.collection("payments");
 
     //JWT
     app.post("/jwt", (req, res) => {
       const user = req.body;
       const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "1h",
+        expiresIn: "1d",
       });
 
       res.send({ token });
+    });
+
+    //verify admin
+    const verifyAdmin = async (req, res, next) => {
+      const email = req.decoded.email;
+      const result = await userCollection.findOne({ email: email });
+      if (!result || result?.role !== "Admin")
+        return res
+          .status(403)
+          .send({ error: true, message: "forbidden access" });
+
+      next();
+    };
+
+    //check admin
+    app.get("/users/admin/:email", verifyToken, async (req, res) => {
+      const email = req.params.email;
+
+      if (req.decoded.email !== email) {
+        res.send({ admin: false });
+      }
+
+      const user = await userCollection.findOne({ email: email });
+      res.send({ admin: user?.role === "Admin" });
+    });
+
+    //get all users data only admin can get this
+    app.get("/allUses/admin", verifyToken, verifyAdmin, async (req, res) => {
+      const result = await userCollection.find({}).toArray();
+
+      return res.send(result);
     });
 
     //Get Menu
@@ -142,6 +176,55 @@ async function run() {
       const query = { _id: new ObjectId(id) };
 
       const result = await cartCollection.deleteOne(query);
+
+      res.send(result);
+    });
+
+    ///payment intent
+    app.post("/create-payment-intent", async (req, res) => {
+      const { price } = req.body;
+      const amount = Math.round(price * 100);
+
+      const { client_secret } = await stripe.paymentIntents.create({
+        amount,
+        currency: "inr",
+        payment_method_types: ["card"],
+      });
+
+      res.send({
+        clientSecret: client_secret,
+      });
+    });
+
+    //payment result saving
+    app.post("/payments", verifyToken, async (req, res) => {
+      const payment = req.body;
+
+      const paymentResult = await paymentCollection.insertOne(payment);
+
+      //delete the payment items from carts
+      const query = {
+        _id: {
+          $in: payment.cartIds.map((id) => new ObjectId(id)),
+        },
+      };
+
+      const deleteResult = await cartCollection.deleteMany(query);
+
+      res.send({ paymentMessage: paymentResult, deleteMessage: deleteResult });
+    });
+
+    //payment history
+    app.get("/payment/:email", verifyToken, async (req, res) => {
+      const email = req.params.email;
+
+      if (req.decoded.email !== email) {
+        res.status(403).send({ message: "forbidden access" });
+      }
+
+      const result = await paymentCollection
+        .find({ userEmail: email })
+        .toArray();
 
       res.send(result);
     });

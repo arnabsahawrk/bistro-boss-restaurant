@@ -6,6 +6,8 @@ import { Typography } from "@material-tailwind/react";
 import useFirebase from "../../../hooks/useFirebase";
 import toast from "react-hot-toast";
 import { GoHomeFill } from "react-icons/go";
+import { MdSpaceDashboard } from "react-icons/md";
+import { MdGroups } from "react-icons/md";
 
 const AdminBar = () => {
   const { signOutUser } = useFirebase();
@@ -87,24 +89,35 @@ const AdminBar = () => {
 
           {/* Nav Items */}
           <div className="flex flex-col justify-between flex-1 mt-6">
-            {/* Conditional toggle button here.. */}
-
             {/*  Menu Items */}
             <nav>
-              {/* Statistics */}
-              {/* <NavLink
-                  to="/dashboard"
-                  end
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5  transition-colors duration-300 transform  hover:bg-gray-300   hover:text-gray-700 ${
-                      isActive ? "bg-gray-300  text-gray-700" : "text-gray-600"
-                    }`
-                  }
-                >
-                  <BsGraphUp className="w-5 h-5" />
-  
-                  <span className="mx-4 font-medium">Statistics</span>
-                </NavLink> */}
+              {/* Admin Home */}
+              <NavLink
+                to="/admin"
+                end
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-2  transition-colors duration-300 transform  hover:text-white ${
+                    isActive ? "text-white" : "text-[#151515]"
+                  }`
+                }
+              >
+                <GoHomeFill className="w-5 h-5" />
+
+                <span className="mx-4 font-medium">Admin Home</span>
+              </NavLink>
+              {/* My Cart */}
+              <NavLink
+                to="/admin/allUsers"
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-2  transition-colors duration-300 transform  hover:text-white ${
+                    isActive ? "text-white" : "text-[#151515]"
+                  }`
+                }
+              >
+                <MdGroups className="w-5 h-5" />
+
+                <span className="mx-4 font-medium">All Users</span>
+              </NavLink>
             </nav>
           </div>
         </div>
@@ -112,21 +125,27 @@ const AdminBar = () => {
         <div>
           <hr />
           {/* Home  */}
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `flex items-center px-4 py-2 my-5  transition-colors duration-300 transform hover:text-white ${
-                isActive ? "text-white" : "text-[#151515]"
-              }`
-            }
+          <button
+            onClick={() => navigate("/")}
+            className="flex w-full items-center px-4 py-2 mt-2 text-[#151515] hover:text-white transition-colors duration-300 transform"
           >
             <GoHomeFill className="w-5 h-5" />
             <span className="mx-4 font-medium">Home</span>
-          </NavLink>
+          </button>
 
+          {/* Admin  */}
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="flex w-full items-center px-4 py-2 mt-2 text-[#151515] hover:text-white transition-colors duration-300 transform"
+          >
+            <MdSpaceDashboard className="w-5 h-5" />
+            <span className="mx-4 font-medium">Dashboard</span>
+          </button>
+
+          {/* Sign Out  */}
           <button
             onClick={handleSignOut}
-            className="flex w-full items-center px-4 py-2 mt-5 text-[#151515] hover:text-white transition-colors duration-300 transform"
+            className="flex w-full items-center px-4 py-2 mt-2 text-[#151515] hover:text-white transition-colors duration-300 transform"
           >
             <GrLogout className="w-5 h-5" />
 

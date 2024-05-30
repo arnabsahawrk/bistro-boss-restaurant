@@ -75,12 +75,12 @@ export const useGetReviews = () => {
 //Get Cart Data
 export const useGetCart = () => {
   const axiosSecure = useAxiosSecure();
-  const { user } = useFirebase();
+  const { user, authLoading } = useFirebase();
 
   const getCart = async () => {
     try {
       if (user && !!user?.email) {
-        const { data } = await axiosSecure.get(`/carts?email=${user?.email}`);
+        const { data } = await axiosSecure.get(`/carts?email=${user.email}`);
         return data;
       }
     } catch (err) {
@@ -88,10 +88,89 @@ export const useGetCart = () => {
     }
   };
 
-  const { data: userCartData = [], isLoading: userCartLoading } = useQuery({
-    queryKey: ["userCart"],
+  const {
+    data: userCartData = [],
+    isLoading: userCartLoading,
+    refetch: cartRefetch,
+  } = useQuery({
+    queryKey: ["userCart", user?.email],
+    enabled: !authLoading && !!user?.email,
     queryFn: getCart,
   });
 
-  return { userCartData, userCartLoading };
+  return { userCartData, userCartLoading, cartRefetch };
+};
+
+export const useGetAdmin = () => {
+  const axiosSecure = useAxiosSecure();
+  const { user, authLoading } = useFirebase();
+
+  const getAdmin = async () => {
+    try {
+      if (user && !!user?.email) {
+        const { data } = await axiosSecure(`/users/admin/${user.email}`);
+        return data.admin;
+      }
+    } catch (err) {
+      throw new Error(err.response.data.message || "Failed to get admin data");
+    }
+  };
+
+  const { data: isAdmin = false, isLoading: isAdminLoading } = useQuery({
+    queryKey: ["isAdmin", user?.email],
+    enabled: !authLoading && !!user?.email,
+    queryFn: getAdmin,
+  });
+
+  return { isAdmin, isAdminLoading };
+};
+
+//get all users data only admin can get this
+export const useGetAllUsers = () => {
+  const axiosSecure = useAxiosSecure();
+
+  const getAllUsers = async () => {
+    try {
+      const { data } = await axiosSecure("/allUses/admin");
+      return data;
+    } catch (err) {
+      throw new Error(
+        err.response.data.message || "Failed to get all users data"
+      );
+    }
+  };
+
+  const { data: allUsers = [], isLoading: isAllUsersLoading } = useQuery({
+    queryKey: ["allUsers"],
+    queryFn: getAllUsers,
+  });
+
+  return { allUsers, isAllUsersLoading };
+};
+
+//get all payment history data
+export const useGetPaymentHistory = () => {
+  const axiosSecure = useAxiosSecure();
+  const { user, authLoading } = useFirebase();
+
+  const getPaymentHistory = async () => {
+    try {
+      if (user && !!user?.email) {
+        const { data } = await axiosSecure(`/payment/${user.email}`);
+        return data;
+      }
+    } catch (err) {
+      throw new Error(
+        err.response.data.message || "Failed to get payment history"
+      );
+    }
+  };
+
+  const { data: paymentHistory, isLoading: paymentHistoryLoading } = useQuery({
+    queryKey: ["paymentHistory", user?.email],
+    enabled: !authLoading && !!user?.email,
+    queryFn: getPaymentHistory,
+  });
+
+  return { paymentHistory, paymentHistoryLoading };
 };

@@ -18,14 +18,15 @@ const SignIn = () => {
     try {
       const result = await signInWithGoogle();
       toast.success("Successfully Sign In");
-      setAuthLoading(false);
       navigate(location?.state || "/");
       if (result?.user?.email) {
+        setAuthLoading(true);
         const { data } = await axiosPublic.post("/jwt", {
           email: result?.user?.email,
         });
 
         localStorage.setItem("access-token", data.token);
+        setAuthLoading(false);
       }
     } catch (err) {
       toast.error(`${err}`);

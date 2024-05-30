@@ -10,9 +10,11 @@ import { useEffect, useState } from "react";
 import Container from "../Container/Container";
 import useFirebase from "../../../hooks/useFirebase";
 import toast from "react-hot-toast";
+import { useGetAdmin } from "../../../hooks/TanStackQuery/useGet";
 
 function NavList() {
-  const { user, signOutUser } = useFirebase();
+  const { user, signOutUser } = useFirebase() || {};
+  const { isAdmin } = useGetAdmin();
   const navigate = useNavigate();
   const handleSignOut = async () => {
     try {
@@ -66,16 +68,42 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-bold font-cinzel text-white hover:text-[#EEFF25]"
       >
-        <NavLink
-          to="/dashboard"
-          className={({ isActive, isPending }) =>
-            `${isActive ? "text-[#EEFF25]" : ""} ${
-              isPending ? "text-amber-900" : ""
-            }`
-          }
-        >
-          Dashboard
-        </NavLink>
+        {user ? (
+          isAdmin ? (
+            <NavLink
+              to="/admin"
+              className={({ isActive, isPending }) =>
+                `${isActive ? "text-[#EEFF25]" : ""} ${
+                  isPending ? "text-amber-900" : ""
+                }`
+              }
+            >
+              Dashboard
+            </NavLink>
+          ) : (
+            <NavLink
+              to="/dashboard"
+              className={({ isActive, isPending }) =>
+                `${isActive ? "text-[#EEFF25]" : ""} ${
+                  isPending ? "text-amber-900" : ""
+                }`
+              }
+            >
+              Dashboard
+            </NavLink>
+          )
+        ) : (
+          <NavLink
+            to="/dashboard"
+            className={({ isActive, isPending }) =>
+              `${isActive ? "text-[#EEFF25]" : ""} ${
+                isPending ? "text-amber-900" : ""
+              }`
+            }
+          >
+            Dashboard
+          </NavLink>
+        )}
       </Typography>
       <Typography
         as="li"
