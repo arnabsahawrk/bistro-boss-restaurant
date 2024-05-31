@@ -174,3 +174,45 @@ export const useGetPaymentHistory = () => {
 
   return { paymentHistory, paymentHistoryLoading };
 };
+
+//get admin states
+export const useGetAdminStats = () => {
+  const axiosSecure = useAxiosSecure();
+
+  const getAdminStats = async () => {
+    try {
+      const { data } = await axiosSecure("/admin/stats");
+      return data;
+    } catch (err) {
+      throw new Error(err.response.data.message || "Failed to get admin-stats");
+    }
+  };
+
+  const { data: adminStats, isLoading: isLoadingAdminStats } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: getAdminStats,
+  });
+
+  return { adminStats, isLoadingAdminStats };
+};
+
+//get admin states
+export const useGetOrderStats = () => {
+  const axiosSecure = useAxiosSecure();
+
+  const getOrderStats = async () => {
+    try {
+      const { data } = await axiosSecure("/admin/orders-stats");
+      return data;
+    } catch (err) {
+      throw new Error(err.response.data.message || "Failed to get order-stats");
+    }
+  };
+
+  const { data: orderStats, isLoading: isLoadingOrderStats } = useQuery({
+    queryKey: ["order-stats"],
+    queryFn: getOrderStats,
+  });
+
+  return { orderStats, isLoadingOrderStats };
+};

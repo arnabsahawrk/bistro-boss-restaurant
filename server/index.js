@@ -200,6 +200,12 @@ async function run() {
     app.post("/payments", verifyToken, async (req, res) => {
       const payment = req.body;
 
+      const menuItemIds = payment.menuItemIds;
+      const menuItemObjectIds = menuItemIds.map(
+        (singleItem) => new ObjectId(singleItem)
+      );
+      payment.menuItemIds = menuItemObjectIds;
+
       const paymentResult = await paymentCollection.insertOne(payment);
 
       //delete the payment items from carts
@@ -224,6 +230,75 @@ async function run() {
 
       const result = await paymentCollection
         .find({ userEmail: email })
+        .toArray();
+
+      res.send(result);
+    });
+
+    //admin stats
+    app.get("/admin/stats", verifyToken, verifyAdmin, async (req, res) => {
+      const customers = await userCollection.estimatedDocumentCount();
+      const products = await menuCollection.estimatedDocumentCount();
+      const orders = await paymentCollection.estimatedDocumentCount();
+
+      //this a fakira way to get the revenue
+      // const payments = await paymentCollection.find({}).toArray();
+      // const revenue = payments.reduce(
+      //   (total, payment) => total + payment.price,
+      //   0
+      // );
+
+      //aggregate way
+      const result = await paymentCollection
+        .aggregate([
+          {
+            $group: {
+              _id: null,
+              revenue: { $sum: "$price" },
+            },
+          },
+        ])
+        .toArray();
+
+      const revenue = result.length > 0 ? result[0].revenue : 0;
+
+      res.send({ customers, products, orders, revenue });
+    });
+
+    //order stats
+    app.get("/admin/orders-stats", async (req, res) => {
+      const result = await paymentCollection
+        .aggregate([
+          {
+            $unwind: "$menuItemIds",
+          },
+          {
+            $lookup: {
+              from: "menu",
+              localField: "menuItemIds",
+              foreignField: "_id",
+              as: "menuItems",
+            },
+          },
+          {
+            $unwind: "$menuItems",
+          },
+          {
+            $group: {
+              _id: "$menuItems.category",
+              quantity: { $sum: 1 },
+              revenue: { $sum: "$menuItems.price" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              category: "$_id",
+              quantity: "$quantity",
+              revenue: "$revenue",
+            },
+          },
+        ])
         .toArray();
 
       res.send(result);
